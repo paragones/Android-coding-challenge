@@ -1,12 +1,14 @@
-package com.parag.autolabs.ui.speech
+package com.parag.autolabs.ui.main
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.location.Address
+import android.location.LocationManager
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.util.Log
 import com.parag.autolabs.R
-import com.parag.autolabs.R.id.weatherText
 import com.parag.autolabs.services.concatenateAlphaAnimations
 import com.parag.autolabs.services.gone
 import com.parag.autolabs.services.invisible
@@ -15,16 +17,19 @@ import com.parag.autolabs.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_speech.*
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
+import android.location.Geocoder
+import com.parag.autolabs.models.WeatherResult
 
-class SpeechActivity : BaseActivity(), SpeechView {
-    val RESULT_SPEECH = 10
+
+class MainActivity : BaseActivity(), MainView {
+    private val RESULT_SPEECH = 10
 
     @Inject
-    lateinit var presenter: SpeechPresenter
+    lateinit var presenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.e(this.javaClass.simpleName, "onCreate")
         setContentView(R.layout.activity_speech)
         component().inject(this)
         setupView()
@@ -32,11 +37,9 @@ class SpeechActivity : BaseActivity(), SpeechView {
 
     private fun setupView() {
         title = getString(R.string.speech_title)
-        concatenateAlphaAnimations(mutableListOf(weatherText, microphone), 500, 1f)
         presenter.attach(this)
         microphone.setOnClickListener {
-//            displayLoading()
-            listen(this)
+            if (isPermissionGranted) listen(this)
         }
     }
 
@@ -50,7 +53,7 @@ class SpeechActivity : BaseActivity(), SpeechView {
         microphone.visible()
     }
 
-    fun listen(activity: Activity) {
+    private fun listen(activity: Activity) {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
@@ -67,8 +70,8 @@ class SpeechActivity : BaseActivity(), SpeechView {
         }
     }
 
-    override fun displaySpeech(speechResult: List<String>) {
-        weatherText.text = speechResult[0]
+    override fun displaySpeech(weatherResult: List<WeatherResult>) {
+        weatherText.text = weatherResult[0].toString()
         hideLoading()
     }
 

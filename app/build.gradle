@@ -12,8 +12,14 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        def Properties properties = new Properties()
+        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
         buildConfigField 'String', 'API_HOST', apiHost
+        buildConfigField 'String', 'WEATHER_APP_ID', properties.getProperty("weatherAppId", "")
     }
+
     buildTypes {
         release {
             minifyEnabled false
