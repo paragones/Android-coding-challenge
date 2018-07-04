@@ -13,7 +13,7 @@ Just press the microphone button and ask for the weather.
 
 - If you didn't say the word 'weather', it will not return any results
 - If you say the word weather but didn't specify the city, it will return the result of your current city
-- If you say the word weather and with a corresponding city, it will return a list of the city that close to what you said.
+- If you say the word weather and with a corresponding city, it will return a list of cities that is close to what you said.
 
 ### How to run it
 
@@ -23,7 +23,7 @@ Run the app by (after downloading)
 - press the play button on Android Studio if ever
 
 <i>Note: since the app uses Openweathermap Api, in order to build the app, it needs to get an Api Key on
-https://openweathermap.org/appid. Afterwards, save it on gradle.properties or local.properties <i>
+https://openweathermap.org/appid. Afterwards, save it on gradle.properties or local.properties </i>
 
 ### Code Design and Architectural Solution
 
