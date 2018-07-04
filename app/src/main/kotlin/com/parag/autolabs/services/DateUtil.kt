@@ -5,11 +5,11 @@ import java.util.*
 
 object DateUtil {
 
-    const val MMM_DD = "MMM dd, yyyy"
+    const val HH_MM = "hh:mm a"
 
-    fun parseDate(date: Date?): String {
-        val simpleDateFormat = SimpleDateFormat(MMM_DD, Locale.getDefault())
-        return simpleDateFormat.format(date)
+    fun parseDate(dateLong: Long): String {
+        val simpleDateFormat = SimpleDateFormat(HH_MM, Locale.getDefault())
+        return simpleDateFormat.format(Date(dateLong))
     }
 
 }

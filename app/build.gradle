@@ -87,4 +87,7 @@ dependencies {
     implementation "com.makeramen:roundedimageview:$roundImageViewVersion"
     implementation "com.squareup.picasso:picasso:$picassoVersion"
     implementation "com.github.ybq:Android-SpinKit:$spinKitVersion"
+    implementation "com.android.support:support-compat:$androidSupportVersion"
+    implementation 'com.daimajia.easing:library:2.0@aar'
+    implementation 'com.daimajia.androidanimations:library:2.3@aar'
 }

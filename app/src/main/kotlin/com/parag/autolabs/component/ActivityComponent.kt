@@ -12,7 +12,8 @@ import javax.inject.Singleton
         InteractorModule::class,
         RepositoryModule::class,
         RestModule::class,
-        DataMapperModule::class))
+        DataMapperModule::class,
+        ImageModule::class))
 interface ActivityComponent {
     fun inject(activity: MainActivity)
 }

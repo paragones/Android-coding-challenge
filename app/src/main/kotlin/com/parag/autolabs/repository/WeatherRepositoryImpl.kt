@@ -9,10 +9,6 @@ import io.reactivex.Observable
 class WeatherRepositoryImpl(val weatherRest: WeatherRest): WeatherRepository {
 
     override fun getWeatherFromCity(cityName: String): Observable<WeatherResult> {
-
-        Log.e(this.javaClass.simpleName, "cityName $cityName")
-
         return weatherRest.getWeatherResults(cityName, WEATHER_APP_ID)
     }
-
 }

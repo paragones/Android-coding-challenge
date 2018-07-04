@@ -20,29 +20,22 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.e(this.javaClass.simpleName, "onCreate")
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            Log.e(this.javaClass.simpleName, "permission not granted")
-
             ActivityCompat.requestPermissions(this,
                     arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,
                             Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.RECORD_AUDIO),
                     PERMISSIONS_REQUEST_ACCESS_LOCATION)
         } else {
-            Log.e(this.javaClass.simpleName, "permission granted")
             isPermissionGranted = true
         }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
-        Log.e(this.javaClass.simpleName, "onRequestPermissionsResult")
         when (requestCode) {
             PERMISSIONS_REQUEST_ACCESS_LOCATION ->
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    Log.e(this.javaClass.simpleName, "PERMISSIONS_REQUEST_ACCESS_LOCATION")
                     isPermissionGranted = true
                 }
         }
@@ -57,6 +50,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 .dataMapperModule(DataMapperModule())
                 .networkModule(NetworkModule())
                 .threadModule(ThreadModule())
+                .imageModule(ImageModule())
                 .build()
     }
 

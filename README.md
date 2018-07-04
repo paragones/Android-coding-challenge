@@ -1,20 +1,108 @@
-# Android Coding Challenge
-We want to know how you write **code** - we don't care about coding challenges where you have to reimplement the HTTP protocol by using the bare basics, we want to know how you can use the existing libraries to solve the problems that we have to solve.
+<img src="/assets/whatstheweather.gif">
 
-Your task is to create a very small Android application (written in Kotlin) which will listen to a voice of the user and will tell them the current weather information when asked for. It's up to you to decide how exactly you want to approach this challenge - do you want to use the native SpeechRecognizer for voice recognition, use offline voice recognition for keywords (e.g. PocketSphinx) or another online service with conversational capabilities (e.g. api.ai, Microsoft LUIS, etc.). You can also choose whichever weather service you want.
+# Autolabs Code Challenge
 
-## What we'll look at
-- Structure of the code - how you use controllers, services, views. Keep it clean and reusable.
-- Code formatting, included unit and Espresso tests.
-- Using external APIs is cool, but you have to make sure the app will support errors if the API is down.
-- Readme - we don't need documentation, but a small file explaining how to run the project will be useful.
-- Overall user experience in the application.
+An Android Application for German Autolabs.
 
-## Time limit
-It should take you between 4 to 8 hours to finish this task. If it takes you longer, it's okay to leave TODOs in the code, just provide an explanation what you would still finish there.
+This project aims to show a list of simple weather reports.
+It is written in Kotlin.
 
-After sending the challenge we'll wait 2 weeks to hear back from you. Feel free to ask us for any clarification if you need it.
+### How it works
 
-## Process
-When you're ready, please fork this repository and start writing code in your fork. You'll get extra points for committing often in small chunks, so we'll see the process of how you created the application.
+Just press the microphone button and ask for the weather.
+
+- If you didn't say the word 'weather', it will not return any results
+- If you say the word weather but didn't specify the city, it will return the result of your current city
+- If you say the word weather and with a corresponding city, it will return a list of the city that close to what you said.
+
+### How to run it
+
+Run the app by (after downloading)
+
+- executing `gradle assembleRelese` on adb or terminal
+- press the play button on Android Studio if ever
+
+<i>Note: since the app uses Openweathermap Api, in order to build the app, it needs to get an Api Key on
+https://openweathermap.org/appid. Afterwards, save it on gradle.properties or local.properties <i>
+
+### Code Design and Architectural Solution
+
+The framework made for this challenge was initially made with the MVP pattern in mind. It also abides in CLEAN Architecture with SOLID principles (To meet up the universal rules requirements).
+Unit testing were also created for checking business and logic rules.
+
+<b> Task description Requirements: </b>
+
+    Uses MVP together with CLEAN persistence layers
+    Uses Material Design patterns principles for modern designs
+    Uses Recycler View, Constraint Layout, Picasso Image Loader for best UI performance
+    Best Libraries used: Dagger, Retrofit2, RxJava2, Okhttp, and Kotlin
+    Although not a library itself, I've added some extension classes (AnimationExtension and UiUtils). Its some of the collaboration of my work together my previous colleagues to shorten layout creation.
+
+Libraries Used:
+
+	Kotlin
+	Retrofit
+	Dagger 2
+	RxJava
+	Gson
+	Rounded Image View
+	Picasso Image Loader
+	SpinKit
+
+Classes Used:
+
+Config:	- handles the class dependencies and main application class.
+	MainApplication
+
+	Dagger Components:
+		Activities Component
+
+	Dagger Modules:
+		ThreadModule
+		RepositoryModule
+		ServiceModule
+
+
+Models : - handles all the stored objects to used all over the app
+
+	WeatherResults - the Weather response object
+
+Repositories : - handles the data source of the CLEAN layer.
+
+	WeatherRepository - repository interface
+	WeatherRepositoryImpl - WeatherRepository implementation. Managers rest endpoint calls.
+
+Rest : - part of the data source where CLEAN layer handles the classes needed for the REST Api.
+
+	WeatherRest - holds the response object from REST Api.
+
+Schedulers :- handles thread Scheduling for the REST calls.
+
+	ThreadScheduler - interface scheduler
+	ThreadSchedulerImpl - thread class used for handling RxJava observation and subscription thread.
+
+Services :- handles the services to be used for the app. Such as the database
+
+	DataMapperImpl - Mapping service from response to business object
+    DateUtil - handles date services
+    DefaultParcelable - handles objects serialization and parcelization
+    PicassoImageLoader - handles network image viewing
+
+UI :- ui class that handles the views for the app
+
+	MainActivity - activity class used for viewing the responses and behavior of the app
+	MainAdapter - pager adapter class to handle card views that would be needed to show different repositories
+	MainPresenter - handles the decison making on which view will be seen on the activity
+	MainView - a callback interface that is used by the presenter to show which views will be used
+
+Unit Testing :- Automated unit test
+
+    MainPresenterTest - tests if the presenter correctly shows the right view on certain conditions
+
+Improvements
+
+    Given more time, I would have made more changes in the following:
+    - improve more on the UI especially on how to show results
+    - put more tests
+    - creating a CI to test and deploy
 

@@ -1,8 +1,17 @@
 <resources>
     <string name="app_name">Autolabs</string>
     <string name="microphone_image">microphone image</string>
-    <string name="ask_weather_text">Press the button below to get the weather</string>
+    <string name="ask_weather_text"></string>
     <string name="speech_title">What\'s the weather?</string>
     <string name="no_question">You didn\'t ask for the weather :(</string>
     <string name="speech_result_title">Here\'s what we got</string>
+    <string name="content_description">content description</string>
+    <string name="search_query">Search Query</string>
+    <string name="sunset">Sunset</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="clouds">Clouds</string>
+    <string name="temperature">25 C</string>
+    <string name="city_sample">Berlin</string>
+    <string name="imageFormat">http://openweathermap.org/img/w/%s.png</string>
+    <string name="temperatureFormat">%s C</string>
 </resources>

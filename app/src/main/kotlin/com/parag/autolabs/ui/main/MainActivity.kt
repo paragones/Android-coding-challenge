@@ -1,15 +1,16 @@
 package com.parag.autolabs.ui.main
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.location.Address
-import android.location.LocationManager
 import android.os.Bundle
 import android.speech.RecognizerIntent
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.parag.autolabs.R
-import com.parag.autolabs.services.concatenateAlphaAnimations
+import com.parag.autolabs.models.WeatherResult
+import com.parag.autolabs.services.ImageLoader
 import com.parag.autolabs.services.gone
 import com.parag.autolabs.services.invisible
 import com.parag.autolabs.services.visible
@@ -17,22 +18,26 @@ import com.parag.autolabs.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_speech.*
 import java.util.*
 import javax.inject.Inject
-import android.location.Geocoder
-import com.parag.autolabs.models.WeatherResult
+import kotlin.collections.ArrayList
 
 
 class MainActivity : BaseActivity(), MainView {
     private val RESULT_SPEECH = 10
+    private var items: ArrayList<WeatherResult> = ArrayList()
+    private lateinit var mainAdapter: MainAdapter
 
     @Inject
     lateinit var presenter: MainPresenter
 
+    @Inject
+    lateinit var imageLoader: ImageLoader
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.e(this.javaClass.simpleName, "onCreate")
         setContentView(R.layout.activity_speech)
         component().inject(this)
         setupView()
+        setupList()
     }
 
     private fun setupView() {
@@ -43,9 +48,18 @@ class MainActivity : BaseActivity(), MainView {
         }
     }
 
+    private fun setupList() {
+        mainAdapter = MainAdapter(imageLoader, items, this)
+        mainRecyclerView.layoutManager = LinearLayoutManager(this)
+        mainRecyclerView.adapter = mainAdapter
+    }
+
     private fun displayLoading() {
         progressBar.visible()
         microphone.invisible()
+        weatherText.invisible()
+        resultTitle.invisible()
+        mainRecyclerView.invisible()
     }
 
     private fun hideLoading() {
@@ -54,6 +68,7 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     private fun listen(activity: Activity) {
+        items.clear()
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
@@ -63,16 +78,25 @@ class MainActivity : BaseActivity(), MainView {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         data?.let {
-            if (resultCode == RESULT_OK && requestCode == RESULT_SPEECH && it.hasExtra(RecognizerIntent.EXTRA_RESULTS))
+            if (resultCode == RESULT_OK && requestCode == RESULT_SPEECH && it.hasExtra(RecognizerIntent.EXTRA_RESULTS)) {
                 presenter.loadWeather(it.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS))
-            else
+                displayLoading()
+            } else {
                 Log.e(this.javaClass.simpleName, "Error on getting results")
+            }
         }
     }
 
     override fun displaySpeech(weatherResult: List<WeatherResult>) {
-        weatherText.text = weatherResult[0].toString()
         hideLoading()
+        YoYo.with(Techniques.FadeIn)
+                .duration(700)
+                .playOn(mainRecyclerView)
+        items.addAll(weatherResult)
+        mainAdapter.notifyDataSetChanged()
+        mainRecyclerView.visible()
+        weatherText.visible()
+        resultTitle.visible()
     }
 
     override fun displayNoSpeech() {

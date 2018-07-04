@@ -6,10 +6,12 @@ import com.parag.autolabs.services.DefaultParcelable
 import com.parag.autolabs.services.read
 import com.parag.autolabs.services.write
 import java.io.Serializable
+import java.util.*
 
 data class WeatherResult(@SerializedName("name")val name: String,
-                         @SerializedName("weather") private val weatherJson: List<WeatherJson>,
-                         @SerializedName("main") private val weatherMain: MainJson): DefaultParcelable, Serializable {
+                         @SerializedName("weather") val weatherJson: List<WeatherJson>,
+                         @SerializedName("main") val weatherMain: WeatherMainJson,
+                         @SerializedName("sys") val weatherSystem: WeatherSystemJson): DefaultParcelable, Serializable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.write(name,
                 weatherJson,
@@ -19,25 +21,27 @@ data class WeatherResult(@SerializedName("name")val name: String,
     companion object {
         @JvmField
         val CREATOR = DefaultParcelable.generateCreator {
-            WeatherResult(it.read(), it.read(), it.read())
+            WeatherResult(it.read(), it.read(), it.read(), it.read())
         }
     }
 }
 
-data class WeatherJson(@SerializedName("main")val main:String): DefaultParcelable, Serializable {
+data class WeatherJson(@SerializedName("main")val main:String,
+                       @SerializedName("description")val description: String,
+                       @SerializedName("icon") val icon: String): DefaultParcelable, Serializable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.write(main)
+        parcel.write(main, description, icon)
     }
 
     companion object {
         @JvmField
         val CREATOR = DefaultParcelable.generateCreator {
-            WeatherJson(it.read())
+            WeatherJson(it.read(), it.read(), it.read())
         }
     }
 }
 
-data class MainJson(@SerializedName("temp")val temp: String): DefaultParcelable, Serializable {
+data class WeatherMainJson(@SerializedName("temp")val temp: String): DefaultParcelable, Serializable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.write(temp)
     }
@@ -45,7 +49,21 @@ data class MainJson(@SerializedName("temp")val temp: String): DefaultParcelable,
     companion object {
         @JvmField
         val CREATOR = DefaultParcelable.generateCreator {
-            MainJson(it.read())
+            WeatherMainJson(it.read())
+        }
+    }
+}
+
+data class WeatherSystemJson(@SerializedName("sunrise") val sunrise: Long,
+                             @SerializedName("sunset") val sunset: Long): DefaultParcelable, Serializable {
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.write(sunrise, sunset)
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR = DefaultParcelable.generateCreator {
+            WeatherSystemJson(it.read(), it.read())
         }
     }
 }
